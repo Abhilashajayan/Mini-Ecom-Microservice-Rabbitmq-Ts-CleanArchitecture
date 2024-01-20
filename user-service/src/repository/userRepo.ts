@@ -10,6 +10,7 @@ export class userRepository implements IUserCase{
     constructor(UserModel: Model<IUserSchema>) {
         this.UserModel = UserModel;
       }
+      
       async register(user: UserEntity): Promise<void> {
         try {
           console.log("user repo" , user);
@@ -24,4 +25,24 @@ export class userRepository implements IUserCase{
           throw new Error("Registration failed");
         }
       }
+
+       async login(data:UserEntity): Promise<boolean> {
+        try {
+          console.log("check user");
+          const email = data.email;
+          const password = data.password;
+          const user = await this.UserModel.findOne({ email: email }).exec();
+    
+          if (user && user.password === password) {
+            console.log('login successful');
+            return true;
+          } else {
+            return false;
+          }
+        } catch (error) {
+          console.error("Login failed:", error);
+          throw new Error("Login failed");
+        }
+      }
+
 }

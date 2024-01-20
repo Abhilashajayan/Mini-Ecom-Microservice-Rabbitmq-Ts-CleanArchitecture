@@ -22,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 dbConnection();
 const rabbitMQ = async () => {
     await consumerMessage.userRegConsumer()
+    await consumerMessage.userLoginConsumer()
   };
 rabbitMQ();
 

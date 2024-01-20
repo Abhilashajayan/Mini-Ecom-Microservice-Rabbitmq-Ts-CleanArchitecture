@@ -10,5 +10,8 @@ export class UserUsecase implements IUserCase{
     async register(user: UserEntity): Promise<void> {
       return this.UserRepository.register(user);
     }
+    login(data:UserEntity): Promise<boolean> {
+      return this.UserRepository.login(data);
+  }
     
 }
