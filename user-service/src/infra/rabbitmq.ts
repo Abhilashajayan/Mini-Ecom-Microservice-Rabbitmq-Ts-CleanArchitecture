@@ -50,54 +50,46 @@ export class rabbitmq {
         }
     }
 
+
     async userLoginConsumer() {
-      try {
-        if (!this.Channel) {
+      if (!this.Channel) {
           await this.initialize();
-        }
-    
-        if (this.Channel) {
-          const queue = 'userLogin';
-          await this.Channel.assertQueue(queue, { durable: true });
-    
-          this.Channel.consume(
-            queue,
-            async (msg) => {
-              if (msg !== null && msg.content) {
-                try {
-                  const data = JSON.parse(msg.content.toString());
-                  console.log("Received login credential:", data);
-    
-                  const isValid = await this.userUsecases.login(data);
-    
-                  const responseQueue = msg.properties.replyTo;
-                  const correlationId = msg.properties.correlationId;
-    
-                  this.Channel.sendToQueue(
-                    responseQueue,
-                    Buffer.from(JSON.stringify(isValid)),
-                    { correlationId }
-                  );
-    
-                  this.Channel.ack(msg);
-                } catch (error) {
-                  console.error("Error parsing message content:", error);
-                  console.log("Raw message content:", msg.content.toString());
-    
-                  this.Channel.ack(msg);
-                }
-              }
-            },
-            { noAck: false }
-          );
-    
-          console.log("Waiting for login requests. To exit press CTRL+C");
-        } else {
-          console.error("Failed to create a channel");
-        }
-      } catch (error) {
-        console.error("Error in userLoginConsumer:", error);
       }
-    }
+  
+      if (this.Channel) {
+        await this.Channel.assertQueue('response_queue', { durable: false });
+        const queue = 'login_queue';
+        await this.Channel.assertQueue(queue, { durable: false });
+
+        this.Channel.consume(queue, async (msg) => {
+            if (msg !== null && msg.content) {
+                try {
+                    console.log('Raw login message:', msg);
+                    const loginData = JSON.parse(msg.content.toString());
+                    console.log('Received login message:', loginData);
+                    const loginResult = await this.userUsecases.login(loginData);
+                    const correlationId = msg.properties.correlationId;
+                    const responseQueue = msg.properties.replyTo;
+
+                    if (correlationId && responseQueue) {
+                        const responseMessage = JSON.stringify(loginResult);
+                        await this.Channel.sendToQueue(responseQueue, Buffer.from(responseMessage), {
+                            correlationId,
+                        });
+                        console.log('Login response sent:', responseMessage);
+                    }
+                } catch (error) {
+                    console.error('Error parsing login message content:', error);
+                    console.log('Raw login message content:', msg.content.toString());
+                }
+            }
+        }, { noAck: true });
+      } else {
+          console.error("Failed to create a channel");
+      }
+  }
+  
+
+   
     
 }

@@ -26,7 +26,7 @@ export class userRepository implements IUserCase{
         }
       }
 
-       async login(data:UserEntity): Promise<boolean> {
+       async login(data:UserEntity): Promise<any> {
         try {
           console.log("check user");
           const email = data.email;
@@ -35,7 +35,7 @@ export class userRepository implements IUserCase{
     
           if (user && user.password === password) {
             console.log('login successful');
-            return true;
+            return user;
           } else {
             return false;
           }
