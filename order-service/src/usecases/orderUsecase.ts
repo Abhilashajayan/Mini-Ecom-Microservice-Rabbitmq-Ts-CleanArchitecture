@@ -12,4 +12,9 @@ export class orderUsecase implements IOrderUsercase {
       const orderDetails =  await this.OrderRepository.placeOrder(orderData);
       return orderDetails;
     }
+
+    async cancelOrder(orderData: OrderEntity): Promise<OrderEntity> {
+        const cancelOrder = await this.OrderRepository.cancelOrder(orderData);
+        return cancelOrder;
+    }
 }

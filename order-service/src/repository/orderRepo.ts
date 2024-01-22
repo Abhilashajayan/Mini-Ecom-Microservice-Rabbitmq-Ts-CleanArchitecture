@@ -12,4 +12,14 @@ export class orderRepository implements  IOrderUsercase{
         await newProduct.save();
         return newProduct;
     }
+    async cancelOrder(orderData: OrderEntity): Promise<OrderEntity | null> {
+        console.log(orderData.id,"the data");
+        const cancelledOrder = await this.orderModel.findOneAndUpdate(
+            { _id: orderData.id, status: { $ne: "cancelled" } }, 
+            { $set: { status: "cancelled" } },
+            { new: true } 
+          );
+        console.log(cancelledOrder);
+        return cancelledOrder;
+    }
 }

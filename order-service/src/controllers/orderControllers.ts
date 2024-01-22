@@ -37,6 +37,17 @@ export class orderController {
             res.status(500).json({ error: "Internal Server Error" });
         }
     };
+
+    cancel_order = async (req: Request, res: Response)=>{
+        try{
+            const orderData:any = req.body as string;
+            console.log(orderData);
+            const cancelOrder = await this.orderUsecases.cancelOrder(orderData);
+            return res.status(200).json({cancelOrder: cancelOrder});
+        }catch (err) {
+           return res.status(500).json({error: err});
+        }
+    }
     
     
 }

@@ -19,6 +19,10 @@ export class orderRouter {
             orderControllers.place_order(req, res);
         });
 
+        this.router.post('/order/cancelOrder', (req: Request, res: Response) => {
+            orderControllers.cancel_order(req, res);
+        });
+
     }
 }
 

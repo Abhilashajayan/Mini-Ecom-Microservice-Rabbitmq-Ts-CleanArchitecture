@@ -1,5 +1,5 @@
 export class OrderEntity {
-    public readonly order_id?: string;
+    public readonly id?: string;
     public readonly product: {
       product_id: string;
       product_name: string;
@@ -10,7 +10,7 @@ export class OrderEntity {
     public readonly totalPrice: number;
   
     constructor(
-      order_id: string,
+      id: string,
       product_id: string,
       product_name: string,
       product_price: number,
@@ -18,7 +18,7 @@ export class OrderEntity {
       count: number,
       totalPrice: number
     ) {
-      this.order_id = order_id;
+      this.id = id;
       this.product = {
         product_id: product_id,
         product_name: product_name,
