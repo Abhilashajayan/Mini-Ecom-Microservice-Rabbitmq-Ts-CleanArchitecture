@@ -20,4 +20,8 @@ export class productUsecase implements  IproductUsecase {
     async getAllProduct(): Promise<ProdEntity[]> {
         return await this.productRepository.getAllProduct();
     }
+
+    async getProductData(productData: string):Promise<ProdEntity>{
+        return await this.productRepository.getProductData(productData);
+    }
 }

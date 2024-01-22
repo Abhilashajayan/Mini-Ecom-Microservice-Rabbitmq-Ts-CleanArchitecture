@@ -3,15 +3,27 @@ import { ProductRepository } from '../repository/prodRepo';
 import { ProductModel } from '../adapters/productSchema';
 import { productUsecase } from '../usecase/prodUsecase';
 import { productControllers } from '../controllers/productContoller';
-
+import { ProductService } from '../infra/rabbitmq';
+import exp from 'constants';
 
 export class productRouters {
     router = Router();
 
     constructor(){
+        
         const productRepository = new ProductRepository(ProductModel);
         const productUsecases = new productUsecase(productRepository);
+         const consumerMessage =  new ProductService(productUsecases);
         const productContoller = new productControllers(productUsecases);
+
+        const rabbitMQ = async () => {
+            try {
+                await consumerMessage.initialize();
+            } catch (error) {
+                console.error("Error initializing RabbitMQ:", error);
+            }
+        };
+        rabbitMQ();
 
         this.router.post('/product/addProduct', (req: Request, res: Response) => {
             productContoller.add_Product(req, res);

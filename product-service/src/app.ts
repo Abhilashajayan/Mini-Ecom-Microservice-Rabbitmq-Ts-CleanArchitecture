@@ -4,6 +4,7 @@ import nocache from 'nocache';
 import { dbConnection } from './config/database.config';
 import { productRouter } from './routes/prodRoutes';
 
+
 const app = express();
 const port =  process.env.PORT || 3003;
 app.use(cors());

@@ -4,4 +4,5 @@ export interface IproductUsecase {
     deleteProduct(productData: ProdEntity):Promise<void>
     getProduct(productData: ProdEntity):Promise<ProdEntity>;
     getAllProduct():Promise<ProdEntity[]>;
+    getProductData(productData: string):Promise<ProdEntity>;
 }

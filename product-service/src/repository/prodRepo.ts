@@ -26,5 +26,10 @@ export class ProductRepository  implements IproductUsecase {
         return getAllProduct;
     }
 
+   async getProductData(productData: string): Promise<ProdEntity> {
+        const getProductData = await this.productModel.findById(productData);
+        return getProductData;       
+    }
+
     
 }
